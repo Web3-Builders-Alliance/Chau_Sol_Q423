@@ -1,8 +1,12 @@
-import wallet from "../wba-wallet.json"
-import { createUmi } from "@metaplex-foundation/umi-bundle-defaults"
-import { createGenericFile, createSignerFromKeypair, signerIdentity } from "@metaplex-foundation/umi"
-import { createBundlrUploader } from "@metaplex-foundation/umi-uploader-bundlr"
-import { readFile } from "fs/promises"
+import wallet from '../wba-wallet.json';
+import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
+import {
+  createGenericFile,
+  createSignerFromKeypair,
+  signerIdentity,
+} from '@metaplex-foundation/umi';
+import { createBundlrUploader } from '@metaplex-foundation/umi-uploader-bundlr';
+import { readFile } from 'fs/promises';
 
 // Create a devnet connection
 const umi = createUmi('https://api.devnet.solana.com');
@@ -14,13 +18,16 @@ const signer = createSignerFromKeypair(umi, keypair);
 umi.use(signerIdentity(signer));
 
 (async () => {
-    try {
-        // const image = ???
+  try {
+    const image = createGenericFile(
+      await readFile('generug.png'),
+      'Generug.png'
+    );
 
-        // const [myUri] = ??? 
-        // console.log("Your image URI: ", myUri);
-    }
-    catch(error) {
-        console.log("Oops.. Something went wrong", error);
-    }
+    const [myUri] = await bundlrUploader.upload([image]);
+    console.log('Your image URI: ', myUri);
+    // Your image URI:  https://arweave.net/kQ5HL8_bqSJ2KhGLEcmrJMuYq5QmQ_q42iWa7qrO4Ow
+  } catch (error) {
+    console.log('Oops.. Something went wrong', error);
+  }
 })();
